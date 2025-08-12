@@ -12,11 +12,9 @@ def process_request():
     prompt = request.json.get('prompt')
     model = dictModelType[request.json.get('model')]
 
-    gen_query(prompt, model)
+    response = gen_query(prompt, model)
 
-    return jsonify({
-        "sucess": "OK"
-    })
+    return jsonify(response.to_json())
 
 if __name__ == '__main__':
     app.run(
