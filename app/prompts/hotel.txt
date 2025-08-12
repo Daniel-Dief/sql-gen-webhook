@@ -9,6 +9,7 @@ Rules:
 2. Return only the requested SQL query.
 3. Do not include comments, explanations, or additional text.
 4. Return nothing but the SQL code.
-5. If you are unable to generate the query, return NULL.
+5. Only SELECT statements are allowed; do not use INSERT, UPDATE, DELETE, or any other SQL commands.
+6. If you are unable to generate the query, return NULL.
 
 User request: {prompt}
