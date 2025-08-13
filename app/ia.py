@@ -8,6 +8,20 @@ from threading import Thread
 from app.types.responseAPI import ResponseAPI
 
 def gen_query(prompt: str, model: ModelType) -> ResponseAPI:
+    """
+    Gera uma requisição assíncrona para criar uma query baseada em um modelo de IA e um prompt fornecido.
+
+    Args:
+        prompt (str): Texto de solicitação do usuário.
+        model (ModelType): Objeto contendo informações do modelo (nome, arquivo SQL e template).
+
+    Returns:
+        ResponseAPI: Objeto contendo o ID (UUID), o nome do modelo e o prompt original.
+
+    Observações:
+        - A execução da IA ocorre em segundo plano via `Thread`.
+        - A resposta será salva em `./app/responses/{uuid}.sql` quando concluída.
+    """
     template = Path(f"./app/prompts/{model.prompt_file}").read_text(encoding="utf-8")
     schema = Path(f"./app/models/{model.file_name}").read_text(encoding="utf-8")
 
@@ -31,6 +45,19 @@ def gen_query(prompt: str, model: ModelType) -> ResponseAPI:
     )
 
 def request_ai(prompt: str, uuid: str) -> None:
+    """
+    Executa a requisição ao modelo de IA e salva o resultado em arquivo.
+
+    Args:
+        prompt (str): Prompt formatado a ser enviado para o modelo.
+        uuid (str): Identificador único da requisição, usado para nomear o arquivo de resposta.
+
+    Returns:
+        None: A função não retorna valor.
+
+    Observações:
+        - A resposta gerada é salva no diretório `./app/responses/` com codificação UTF-8.
+    """
     llm_model = OllamaLLM(model="gpt-oss:20b")
     response = llm_model.invoke(prompt)
 
