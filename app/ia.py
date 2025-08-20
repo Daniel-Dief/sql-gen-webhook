@@ -2,7 +2,7 @@ from langchain_ollama import OllamaLLM
 from langchain_core.prompts import PromptTemplate
 from pathlib import Path
 from app.types.modelsTypes import ModelType
-from app.helpers.save_response import save_response
+from app.helpers.save_response import save_response, save_request
 from app.helpers.uuid import generate_uuid
 from threading import Thread
 from app.types.responseAPI import ResponseAPI
@@ -20,7 +20,7 @@ def gen_query(prompt: str, model: ModelType) -> ResponseAPI:
 
     Observações:
         - A execução da IA ocorre em segundo plano via `Thread`.
-        - A resposta será salva em `./app/responses/{uuid}.sql` quando concluída.
+        - Ao iniciar a requisição para o modelo de IA, é criado um registro no banco para a futura query.
     """
     template = Path(f"./app/prompts/{model.prompt_file}").read_text(encoding="utf-8")
     schema = Path(f"./app/models/{model.file_name}").read_text(encoding="utf-8")
@@ -32,6 +32,8 @@ def gen_query(prompt: str, model: ModelType) -> ResponseAPI:
     final_prompt = prompt_template.format(schema=schema, prompt=prompt)
 
     uuid = generate_uuid()
+
+    save_request(uuid, model, final_prompt)
 
     Thread(
         target=request_ai,
@@ -56,7 +58,7 @@ def request_ai(prompt: str, uuid: str) -> None:
         None: A função não retorna valor.
 
     Observações:
-        - A resposta gerada é salva no diretório `./app/responses/` com codificação UTF-8.
+        - A resposta gerada é salva em um banco de dados postgres.
     """
     llm_model = OllamaLLM(model="gpt-oss:20b")
     response = llm_model.invoke(prompt)
