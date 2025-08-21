@@ -1,12 +1,10 @@
-version: "3.9"
+version: "1.2"
 
 services:
   app:
-    build: .
+    image: ghcr.io/USUARIO/alise-ai:latest
     container_name: alise-ai
     command: python -m app.main
-    volumes:
-      - .:/app
     ports:
       - "5959:5959"
     depends_on:
@@ -19,9 +17,9 @@ services:
     container_name: postgres_db
     restart: always
     environment:
-      POSTGRES_USER: 
-      POSTGRES_PASSWORD: 
-      POSTGRES_DB: DataVisionAI
+      POSTGRES_USER: ${DBUSER}
+      POSTGRES_PASSWORD: ${DBPASSWORD}
+      POSTGRES_DB: ${DBNAME}
     ports:
       - "5432:5432"
     volumes:
