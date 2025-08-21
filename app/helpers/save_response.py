@@ -1,9 +1,6 @@
-from dotenv import load_dotenv
 from psycopg2 import connect
 from os import getenv
 from app.types.modelsTypes import ModelType
-
-load_dotenv()
 
 def save_request(uuid: str, model: ModelType, client_prompt: str) -> None:
     """

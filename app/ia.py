@@ -6,6 +6,7 @@ from app.helpers.save_response import save_response, save_request
 from app.helpers.uuid import generate_uuid
 from threading import Thread
 from app.types.responseAPI import ResponseAPI
+import os
 
 def gen_query(prompt: str, model: ModelType) -> ResponseAPI:
     """
@@ -60,7 +61,7 @@ def request_ai(prompt: str, uuid: str) -> None:
     Observações:
         - A resposta gerada é salva em um banco de dados postgres.
     """
-    llm_model = OllamaLLM(model="gpt-oss:20b")
+    llm_model = OllamaLLM(base_url=os.getenv('AI_URL'),model="gpt-oss:20b")
     response = llm_model.invoke(prompt)
 
     save_response(
