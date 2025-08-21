@@ -1,8 +1,8 @@
-version: "1.2"
+version: "3.9"
 
 services:
   app:
-    image: ghcr.io/USUARIO/alise-ai:latest
+    image: ghcr.io/daniel-dief/alise-ai:latest
     container_name: alise-ai
     command: python -m app.main
     ports:
