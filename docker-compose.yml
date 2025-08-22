@@ -11,6 +11,9 @@ services:
       - db
     env_file:
       - .env
+    networks:
+      backend_network:
+        ipv4_address: ${APPIP}
 
   db:
     image: postgres:15
@@ -25,6 +28,16 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql
+    networks:
+      backend_network:
+        ipv4_address: ${DBHOST}
 
 volumes:
   postgres_data:
+
+networks:
+  backend_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: ${SUBNET}
